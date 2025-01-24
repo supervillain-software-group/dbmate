@@ -467,7 +467,7 @@ func TestRollback(t *testing.T) {
 		// posts table was deleted
 		err = sqlDB.QueryRow("select count(*) from posts").Scan(&count)
 		require.NotNil(t, err)
-		require.Regexp(t, "(does not exist|doesn't exist|no such table)", err.Error())
+		require.Regexp(t, "(does not exist|doesn't exist|no such table|Invalid object name)", err.Error())
 
 		// users table still exists
 		err = sqlDB.QueryRow("select count(*) from users").Scan(&count)
@@ -485,12 +485,12 @@ func TestRollback(t *testing.T) {
 		// posts table was deleted
 		err = sqlDB.QueryRow("select count(*) from posts").Scan(&count)
 		require.NotNil(t, err)
-		require.Regexp(t, "(does not exist|doesn't exist|no such table)", err.Error())
+		require.Regexp(t, "(does not exist|doesn't exist|no such table|Invalid object name)", err.Error())
 
 		// users table was deleted
 		err = sqlDB.QueryRow("select count(*) from users").Scan(&count)
 		require.NotNil(t, err)
-		require.Regexp(t, "(does not exist|doesn't exist|no such table)", err.Error())
+		require.Regexp(t, "(does not exist|doesn't exist|no such table|Invalid object name)", err.Error())
 	})
 }
 
