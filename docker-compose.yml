@@ -13,6 +13,7 @@ services:
       - clickhouse-cluster-02
       - bigquery
       - spanner-emulator
+      - sqlserver
     environment:
       CLICKHOUSE_TEST_URL: clickhouse://clickhouse:9000/dbmate_test
       CLICKHOUSE_CLUSTER_01_TEST_URL: clickhouse://ch-cluster-01:9000/dbmate_test
@@ -21,6 +22,7 @@ services:
       POSTGRES_TEST_URL: postgres://postgres:postgres@postgres/dbmate_test?sslmode=disable
       BIGQUERY_TEST_URL: bigquery://test/us-east5/dbmate_test?disable_auth=true&endpoint=http%3A%2F%2Fbigquery%3A9050
       SPANNER_POSTGRES_TEST_URL: spanner-postgres://spanner-emulator/dbmate_test?sslmode=disable
+      SQLSERVER_TEST_URL: sqlserver://sa:Password123@sqlserver/dbmate_test
 
   dbmate:
     build:
@@ -73,3 +75,12 @@ services:
 
   spanner-emulator:
     image: gcr.io/cloud-spanner-pg-adapter/pgadapter-emulator
+
+  sqlserver:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    platform: linux/arm64
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: Password123
+    ports:
+      - "1433:1433"

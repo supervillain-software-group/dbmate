@@ -16,6 +16,7 @@ import (
 	_ "github.com/amacneil/dbmate/v2/pkg/driver/mysql"
 	_ "github.com/amacneil/dbmate/v2/pkg/driver/postgres"
 	_ "github.com/amacneil/dbmate/v2/pkg/driver/sqlite"
+	_ "github.com/amacneil/dbmate/v2/pkg/driver/sqlserver"
 
 	"github.com/stretchr/testify/require"
 	"github.com/zenizh/go-capturer"
@@ -339,7 +340,7 @@ func testEachURL(t *testing.T, fn func(*testing.T, *url.URL)) {
 		fn(t, sqliteTestURL(t))
 	})
 
-	optionalTestURLs := []string{"MYSQL_TEST_URL", "POSTGRES_TEST_URL"}
+	optionalTestURLs := []string{"MYSQL_TEST_URL", "POSTGRES_TEST_URL", "SQLSERVER_TEST_URL"}
 	for _, varname := range optionalTestURLs {
 		// split on underscore and take first part
 		testname := strings.ToLower(strings.Split(varname, "_")[0])
@@ -466,7 +467,7 @@ func TestRollback(t *testing.T) {
 		// posts table was deleted
 		err = sqlDB.QueryRow("select count(*) from posts").Scan(&count)
 		require.NotNil(t, err)
-		require.Regexp(t, "(does not exist|doesn't exist|no such table)", err.Error())
+		require.Regexp(t, "(does not exist|doesn't exist|no such table|Invalid object name)", err.Error())
 
 		// users table still exists
 		err = sqlDB.QueryRow("select count(*) from users").Scan(&count)
@@ -484,12 +485,12 @@ func TestRollback(t *testing.T) {
 		// posts table was deleted
 		err = sqlDB.QueryRow("select count(*) from posts").Scan(&count)
 		require.NotNil(t, err)
-		require.Regexp(t, "(does not exist|doesn't exist|no such table)", err.Error())
+		require.Regexp(t, "(does not exist|doesn't exist|no such table|Invalid object name)", err.Error())
 
 		// users table was deleted
 		err = sqlDB.QueryRow("select count(*) from users").Scan(&count)
 		require.NotNil(t, err)
-		require.Regexp(t, "(does not exist|doesn't exist|no such table)", err.Error())
+		require.Regexp(t, "(does not exist|doesn't exist|no such table|Invalid object name)", err.Error())
 	})
 }
 
